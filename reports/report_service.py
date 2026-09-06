@@ -1,6 +1,7 @@
 from datetime import datetime
 from collections import defaultdict
 import re
+from exceptions.custom_exceptions import RangeNotFoundError
 
 class ReportService:
     def __init__(self, tree):
@@ -45,7 +46,7 @@ class ReportService:
         results = self.tree.range_search(start, end)
         
         if not results:
-            return [], 0
+            raise RangeNotFoundError("No hay registros en el rango solicitado")
         
         # Pagination
         total = len(results)

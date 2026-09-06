@@ -47,6 +47,9 @@ class LogSense:
             self.tree = BPlusTree(order=4)
         
         self.report_service = ReportService(self.tree)
+        self.curator.register_existing_records(
+            record for _, record in self.tree.get_all_records()
+        )
     
     def save_state(self):
         """Save tree state to persistence (CU-05)"""
@@ -137,7 +140,7 @@ class LogSense:
                     if self.report_service.export_to_csv(results, filename):
                         print(f"Exportado a {filename}")
         
-        except ValueError as e:
+        except (ValueError, RangeNotFoundError) as e:
             print(f"Error: {e}")
     
     def show_service_report(self):

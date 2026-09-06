@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from exceptions.custom_exceptions import InvalidTimestampError, DuplicateEntryError
 
 class LogCurator:
@@ -27,7 +27,9 @@ class LogCurator:
             if ts.endswith('Z'):
                 ts = ts[:-1] + '+00:00'
             dt = datetime.fromisoformat(ts)
-            return dt.isoformat()
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
         except ValueError:
             raise InvalidTimestampError(f"Invalid timestamp format: {ts}")
     
@@ -134,3 +136,18 @@ class LogCurator:
     def reset_duplicate_tracking(self):
         """Reset the duplicate tracking set (useful for new batches)"""
         self._seen_records.clear()
+
+    def register_existing_records(self, records):
+        """Register persisted records so new batches are deduplicated globally."""
+        for record in records:
+            message = getattr(record, 'message', '')
+            if not message:
+                if record.origin == 'browser':
+                    message = f"{getattr(record, 'endpoint', '')}{getattr(record, 'session_id', '')}"
+                elif record.origin == 'api':
+                    message = f"{getattr(record, 'endpoint', '')}{getattr(record, 'trace_id', '')}"
+                elif record.origin == 'alert':
+                    message = getattr(record, 'host', '')
+                elif record.origin == 'audit':
+                    message = f"{getattr(record, 'target', '')}{getattr(record, 'ip', '')}"
+            self._seen_records.add((record.timestamp, record.origin, message))

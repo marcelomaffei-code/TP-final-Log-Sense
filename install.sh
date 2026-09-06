@@ -17,14 +17,21 @@ else
     exit 1
 fi
 
-# Update packages
-if [ "$OS" = "ubuntu" ] || [ "$OS" = "amzn" ]; then
-    sudo yum update -y || sudo apt update -y
-    sudo yum install -y python3 python3-pip git || sudo apt install -y python3 python3-pip git
-else
-    echo "Unsupported OS: $OS"
-    exit 1
-fi
+# Update packages and install prerequisites
+case "$OS" in
+    ubuntu)
+        sudo apt update -y
+        sudo apt install -y python3 python3-pip python3-venv git
+        ;;
+    amzn)
+        sudo yum update -y
+        sudo yum install -y python3 python3-pip git
+        ;;
+    *)
+        echo "Unsupported OS: $OS"
+        exit 1
+        ;;
+esac
 
 echo "Installing Python 3 and pip..."
 python3 --version
