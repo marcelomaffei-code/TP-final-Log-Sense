@@ -1,0 +1,10 @@
+[2025-09-15T15:00:11Z] AUDIT | user=admin@mplataforma.com | action=DELETE_USER | target=user_4521 | ip=190.50.32.10
+[2025-09-15T15:01:25Z] AUDIT | user=admin@mplataforma.com | action=UPDATE_PERMISSIONS | target=user_1234 | ip=190.50.32.10
+[2025-09-15T15:02:40Z] AUDIT | user=operator@mplataforma.com | action=VIEW_LOGS | target=system_logs | ip=200.45.67.89
+[2025-09-15T15:03:55Z] AUDIT | user=admin@mplataforma.com | action=CREATE_USER | target=user_7890 | ip=190.50.32.10
+[2025-09-15T15:05:10Z] AUDIT | user=operator@mplataforma.com | action=EXPORT_REPORT | target=daily_report | ip=200.45.67.89
+[2025-09-15T15:06:25Z] AUDIT | user=admin@mplataforma.com | action=MODIFY_SETTINGS | target=security_config | ip=190.50.32.10
+[2025-09-15T15:07:40Z] AUDIT | user=operator@mplataforma.com | action=VIEW_AUDIT | target=audit_trail | ip=200.45.67.89
+[2025-09-15T15:08:55Z] AUDIT | user=admin@mplataforma.com | action=RESET_PASSWORD | target=user_3456 | ip=190.50.32.10
+[2025-09-15T15:10:10Z] AUDIT | user=operator@mplataforma.com | action=BACKUP_DATA | target=database_backup | ip=200.45.67.89
+[2025-09-15T15:11:25Z] AUDIT | user=admin@mplataforma.com | action=DELETE_USER | target=user_9012 | ip=190.50.32.10

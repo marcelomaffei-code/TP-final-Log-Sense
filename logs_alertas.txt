@@ -1,0 +1,10 @@
+[2025-09-15T14:40:00Z] ALERT | service=payment-gateway | severity=high | msg="Retry queue exceeded 1000 pending items" | host=prod-node-03
+[2025-09-15T14:41:15Z] ALERT | service=auth-service | severity=critical | msg="Authentication rate limit exceeded" | host=prod-node-01
+[2025-09-15T14:42:30Z] ALERT | service=user-service | severity=medium | msg="Database connection pool exhausted" | host=prod-node-02
+[2025-09-15T14:43:45Z] ALERT | service=payment-gateway | severity=high | msg="Payment API response time > 5s" | host=prod-node-03
+[2025-09-15T14:44:00Z] ALERT | service=auth-service | severity=low | msg="Failed logout attempt detected" | host=prod-node-01
+[2025-09-15T14:45:15Z] ALERT | service=user-service | severity=critical | msg="Memory usage > 90%" | host=prod-node-02
+[2025-09-15T14:46:30Z] ALERT | service=payment-gateway | severity=medium | msg="Transaction timeout detected" | host=prod-node-03
+[2025-09-15T14:47:45Z] ALERT | service=auth-service | severity=high | msg="Multiple failed login attempts" | host=prod-node-01
+[2025-09-15T14:48:00Z] ALERT | service=user-service | severity=low | msg="Cache miss rate increased" | host=prod-node-02
+[2025-09-15T14:49:15Z] ALERT | service=payment-gateway | severity=critical | msg="Payment gateway unavailable" | host=prod-node-03

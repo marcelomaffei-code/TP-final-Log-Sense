@@ -1,0 +1,10 @@
+[2025-09-15T14:32:01Z] BROWSER | chrome/120.0 | GET /api/products?page=2 | 200 | 145ms | session_id=a8f3k2
+[2025-09-15T14:33:15Z] BROWSER | firefox/115.0 | POST /api/cart/add | 201 | 89ms | session_id=b9g4l3
+[2025-09-15T14:34:22Z] BROWSER | chrome/120.0 | GET /api/user/profile | 200 | 120ms | session_id=a8f3k2
+[2025-09-15T14:35:45Z] BROWSER | safari/17.0 | GET /api/products?page=1 | 200 | 156ms | session_id=c5h6m7
+[2025-09-15T14:36:10Z] BROWSER | chrome/120.0 | GET /api/products?page=3 | 500 | 2100ms | session_id=a8f3k2
+[2025-09-15T14:37:30Z] BROWSER | edge/120.0 | GET /api/search?q=laptop | 200 | 178ms | session_id=d8j9n0
+[2025-09-15T14:38:55Z] BROWSER | firefox/115.0 | POST /api/checkout | 402 | 95ms | session_id=b9g4l3
+[2025-09-15T14:39:20Z] BROWSER | chrome/120.0 | GET /api/orders/history | 200 | 134ms | session_id=a8f3k2
+[2025-09-15T14:40:05Z] BROWSER | safari/17.0 | GET /api/products/123 | 404 | 67ms | session_id=c5h6m7
+[2025-09-15T14:41:15Z] BROWSER | chrome/120.0 | DELETE /api/cart/item/456 | 200 | 88ms | session_id=a8f3k2
