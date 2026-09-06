@@ -1,0 +1,106 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class LogRecord {
+  #_timestamp: str
+  #_origin: str
+  +timestamp: str
+  +origin: str
+  {abstract} +calculate_level(): str
+}
+
+class BrowserLog {
+  +browser: str
+  +method: str
+  +endpoint: str
+  +status_code: int
+  +response_time: int
+  +session_id: str
+  +calculate_level(): str
+}
+
+class ApiLog {
+  +service: str
+  +method: str
+  +endpoint: str
+  +status_code: int
+  +latency: int
+  +trace_id: str
+  +message: str
+  +calculate_level(): str
+}
+
+class AlertLog {
+  +service: str
+  +severity: str
+  +message: str
+  +host: str
+  +calculate_level(): str
+}
+
+class AuditLog {
+  +user: str
+  +action: str
+  +target: str
+  +ip: str
+  +calculate_level(): str
+}
+
+class BPlusNode {
+  +is_leaf: bool
+  +keys: list
+  +children: list
+  +parent: BPlusNode
+  +next_leaf: BPlusNode
+}
+
+class BPlusTree {
+  +order: int
+  +root: BPlusNode
+  +insert(key: str, value: LogRecord): None
+  +search(key: str): LogRecord
+  +search_all(key: str): list
+  +range_search(start: str, end: str): list
+  +get_all_records(): list
+  +count_records(): int
+}
+
+class LogParser {
+  +parse(line: str): LogRecord
+}
+
+class LogCurator {
+  -_seen_records: set
+  +curate(record: LogRecord): LogRecord
+  +normalize_timestamp(ts: str): str
+  +normalize_service_name(name: str): str
+  +validate_record(record: LogRecord): None
+  +register_existing_records(records: list): None
+}
+
+class ReportService {
+  -tree: BPlusTree
+  +range_search(start: str, end: str, page: int): tuple
+  +occurrences_by_service(records: list): dict
+  +daily_control_break(): str
+  +detect_recurrent_errors(): str
+  +export_to_csv(records: list, filename: str): bool
+}
+
+class PersistenceManager {
+  {static} +save(tree: BPlusTree, file: str): None
+  {static} +load(file: str): BPlusTree
+}
+
+LogRecord <|-- BrowserLog
+LogRecord <|-- ApiLog
+LogRecord <|-- AlertLog
+LogRecord <|-- AuditLog
+BPlusTree *-- "1..*" BPlusNode
+BPlusNode o-- "0..1" BPlusNode : parent/next
+BPlusTree "1" --> "0..*" LogRecord : stores
+LogParser ..> LogRecord : creates
+LogCurator ..> LogRecord : validates
+ReportService --> BPlusTree
+PersistenceManager ..> BPlusTree : serializes
+@enduml

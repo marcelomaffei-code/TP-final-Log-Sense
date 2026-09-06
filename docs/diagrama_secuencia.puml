@@ -1,0 +1,45 @@
+@startuml
+actor Operador
+participant LogSense
+participant LogParser
+participant LogCurator
+participant BPlusTree
+participant ReportService
+participant PersistenceManager
+
+== CU-01 Ingesta ==
+Operador -> LogSense: ingest_from_file(filepath)
+loop por cada linea valida
+  LogSense -> LogParser: parse(line)
+  LogParser --> LogSense: LogRecord
+  LogSense -> LogCurator: curate(record)
+  alt registro valido y no duplicado
+    LogCurator --> LogSense: record curado
+    LogSense -> BPlusTree: insert(timestamp, record)
+    BPlusTree --> LogSense: insercion completada
+  else formato invalido o duplicado
+    LogCurator --> LogSense: excepcion
+    LogSense -> LogSense: registrar error o descartar
+  end
+end
+LogSense --> Operador: resumen de ingesta
+
+== CU-02 Busqueda y persistencia ==
+Operador -> LogSense: search_by_range(inicio, fin, pagina)
+LogSense -> ReportService: range_search(inicio, fin, pagina)
+ReportService -> BPlusTree: range_search(inicio, fin)
+BPlusTree --> ReportService: registros ordenados
+alt hay resultados
+  ReportService --> LogSense: pagina y total
+  opt exportar
+    LogSense -> ReportService: export_to_csv(registros, archivo)
+  end
+else rango vacio
+  ReportService --> LogSense: RangeNotFoundError
+end
+LogSense --> Operador: resultados o mensaje
+
+System -> LogSense: save_state()
+LogSense -> PersistenceManager: save(tree, archivo)
+PersistenceManager --> LogSense: estado guardado
+@enduml

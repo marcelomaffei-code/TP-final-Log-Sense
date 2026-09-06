@@ -557,8 +557,20 @@ TP-final-Log-Sense/
 ├── logs_api.txt           # Archivo de prueba (logs API)
 ├── logs_alertas.txt       # Archivo de prueba (logs alertas)
 ├── logs_audit.txt         # Archivo de prueba (logs auditoría)
+├── docs/                  # Memoria técnica y diagramas UML
+│   ├── memoria_tecnica.md
+│   ├── diagrama_clases.puml
+│   ├── diagrama_casos_uso.puml
+│   └── diagrama_secuencia.puml
 └── README.md              # Este archivo
 ```
+
+## Documentación de entrega
+
+- [Memoria técnica](docs/memoria_tecnica.md)
+- [Diagrama de clases](docs/diagrama_clases.puml)
+- [Diagrama de casos de uso](docs/diagrama_casos_uso.puml)
+- [Diagrama de secuencia](docs/diagrama_secuencia.puml)
 
 ## Requisitos
 
@@ -691,16 +703,15 @@ cd TP-final-Log-Sense
 
 ### 6. Prueba de Carga
 
-Para realizar la prueba de carga con 50,000 registros:
+El benchmark incluido mide por separado la inserción y una búsqueda por rango:
 
 ```bash
-# Generar archivo de prueba grande
-python generate_test_data.py 50000
-
-# Ingestar el archivo
-python main.py
-# Seleccionar opción 1 e ingresar el archivo generado
+python load_test.py
 ```
+
+La prueba ejecuta escenarios de 1.000, 10.000, 50.000 y 100.000 registros.
+Los tiempos dependen del hardware y deben registrarse junto con el entorno de ejecución
+en la memoria técnica.
 
 ## Archivos Generados
 

@@ -14,18 +14,42 @@ class BPlusTree:
                 i += 1
             c = c.children[i]
         return c
+
+    def _make_storage_key(self, timestamp, value):
+        """Build a stable composite key: timestamp plus record identity."""
+        if isinstance(timestamp, tuple):
+            return timestamp
+
+        origin = getattr(value, "origin", "")
+        message = getattr(value, "message", "")
+        if not message:
+            message = repr(sorted(getattr(value, "__dict__", {}).items()))
+        return timestamp, f"{origin}|{message}"
+
+    @staticmethod
+    def _lower_bound(timestamp):
+        return timestamp, ""
+
+    @staticmethod
+    def _upper_bound(timestamp):
+        return timestamp, chr(0x10FFFF)
+
+    @staticmethod
+    def _display_key(key):
+        return key[0] if isinstance(key, tuple) else key
     
     def insert(self, key, value):
         """Insert a key-value pair into the tree"""
-        leaf = self._find_leaf(key)
+        storage_key = self._make_storage_key(key, value)
+        leaf = self._find_leaf(storage_key)
         
         # Find insertion position
         i = 0
-        while i < len(leaf.keys) and key > leaf.keys[i]:
+        while i < len(leaf.keys) and storage_key > leaf.keys[i]:
             i += 1
         
         # Insert key and value
-        leaf.keys.insert(i, key)
+        leaf.keys.insert(i, storage_key)
         leaf.children.insert(i, value)
         
         # Split if overflow
@@ -106,22 +130,40 @@ class BPlusTree:
     
     def search(self, key):
         """Search for a specific key"""
-        leaf = self._find_leaf(key)
+        leaf = self._find_leaf(self._lower_bound(key))
         for i, k in enumerate(leaf.keys):
-            if k == key:
+            if self._display_key(k) == key:
                 return leaf.children[i]
+            if self._display_key(k) > key:
+                break
         return None
+
+    def search_all(self, key):
+        """Return every record stored for an exact timestamp."""
+        records = []
+        leaf = self._find_leaf(self._lower_bound(key))
+        while leaf:
+            for index, storage_key in enumerate(leaf.keys):
+                timestamp = self._display_key(storage_key)
+                if timestamp == key:
+                    records.append(leaf.children[index])
+                elif timestamp > key:
+                    return records
+            leaf = leaf.next_leaf
+        return records
     
     def range_search(self, start, end):
         """Search for all keys in a range [start, end]"""
         res = []
-        leaf = self._find_leaf(start)
+        lower = self._lower_bound(start)
+        upper = self._upper_bound(end)
+        leaf = self._find_leaf(lower)
         
         while leaf:
             for i, k in enumerate(leaf.keys):
-                if start <= k <= end:
+                if lower <= k <= upper:
                     res.append(leaf.children[i])
-                elif k > end:
+                elif k > upper:
                     return res
             leaf = leaf.next_leaf
         
@@ -140,7 +182,7 @@ class BPlusTree:
         
         while leaf:
             for i in range(len(leaf.keys)):
-                res.append((leaf.keys[i], leaf.children[i]))
+                res.append((self._display_key(leaf.keys[i]), leaf.children[i]))
             leaf = leaf.next_leaf
         
         return res

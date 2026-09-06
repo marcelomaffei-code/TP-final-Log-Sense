@@ -1,0 +1,36 @@
+@startuml
+left to right direction
+
+actor "Operador del sistema" as Operator
+actor "Analista de datos" as Analyst
+actor "Equipo de operaciones" as Operations
+actor "Sistema" as System
+
+rectangle "Log Sense" {
+  usecase "CU-01\nIngestar lote" as UC1
+  usecase "Parsear y extraer metadata" as Parse
+  usecase "Curar y validar registro" as Curate
+  usecase "Detectar duplicado" as Duplicate
+  usecase "CU-02\nBuscar por rango temporal" as UC2
+  usecase "Paginar resultados" as Page
+  usecase "Exportar CSV" as CSV
+  usecase "CU-03\nReporte por servicio" as UC3
+  usecase "CU-04\nCorte diario" as UC4
+  usecase "CU-05\nPersistir y recuperar" as UC5
+  usecase "CU-06\nErrores recurrentes" as UC6
+}
+
+Operator --> UC1
+Analyst --> UC2
+Analyst --> UC4
+Operations --> UC3
+Operations --> UC6
+System --> UC5
+
+UC1 .> Parse : <<include>>
+UC1 .> Curate : <<include>>
+UC1 .> Duplicate : <<include>>
+UC2 .> Page : <<include>>
+UC2 .> CSV : <<extend>>
+UC5 .> UC1 : <<extend>>
+@enduml
